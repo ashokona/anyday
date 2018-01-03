@@ -1,0 +1,43 @@
+.dummy {
+    height: 230px;
+}
+
+.mail-row {
+    border: 2px solid green;
+    padding: 30px;
+    margin-top: 20px;
+    background-color: #e6ffe6;
+}
+
+.mail-icon i {
+    font-size: 100px;
+    line-height: 100px;
+    margin: 0px auto;
+    display: table;
+    color: green;
+}
+
+.mail-btn button {
+    margin: 0px auto;
+    display: table;
+    margin-top: 20px
+}
+
+.mail-btn h5 {
+    padding-top: 15px;
+}
+
+.mail-fail-row {
+    border: 2px solid red;
+    padding: 30px;
+    margin-top: 20px;
+    background-color: #fff0e6
+}
+
+.mail-icon-sad i {
+    font-size: 100px;
+    line-height: 100px;
+    margin: 0px auto;
+    display: table;
+    color: #F35C00;
+}

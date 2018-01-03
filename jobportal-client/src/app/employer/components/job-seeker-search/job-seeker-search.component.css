@@ -1,0 +1,44 @@
+.searchjobseeker-section {
+    padding: 30px 0px;
+}
+.searchjobseeker-section h2 {
+    font-size: 20px !important;
+    font-weight: normal;
+    text-align: left;
+    padding: 0px 30px;
+}
+.jobseeeker-section {
+    padding: 26px 20px;
+}
+.jobseeeker-section h2 {
+    font-weight: normal;
+    letter-spacing: 0.04em;
+}
+.jobseeeker-section .product-name ul {
+    padding-top: 5px;
+}
+.jobseeeker-section .product-name ul li {
+    display: inline;
+    padding: 0px 6px;
+} 
+.jobseeeker-section .product-thumbnail {
+    padding: 15px 10px 15px 0px;
+}
+.jobseeeker-section .product-thumbnail img {
+    width: 80px;
+}
+.jobseeeker-section .product-price .amount {
+    font-size: 18px;
+    line-height: 20px;
+    color: #053a4f;
+}
+input.ng-tns-c8-0.ui-inputtext.ui-widget.ui-state-default.ui-corner-all {
+    background-color: white;
+    padding: 0px 42px;
+}
+input#calc_shipping_state, input#calc_shipping_postcode, select#calc_shipping_country {
+    background-color: white;
+}
+.btn:hover span {
+    color: white !important;
+}

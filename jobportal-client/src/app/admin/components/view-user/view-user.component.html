@@ -1,0 +1,241 @@
+<section class="section-wrap">
+    <div class="container">
+        <div class="row">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#personal">Personal/Work Info</a></li>
+                <li><a data-toggle="tab" href="#offers">Offers History</a></li>
+                <li><a data-toggle="tab" href="#transcation" *ngIf="userData?.userType === 'employer'">Transaction History</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="personal" class="tab-pane fade in active">
+                    <div class="order-review-wrap ecommerce-checkout-review-order" id="order_review">
+                        <h2 class="heading uppercase bottom-line full-grey">User Information</h2>
+                        <div class="col-lg-6">
+                            <table class="table shop_table ecommerce-checkout-review-order-table">
+                                <tbody>
+                                    <tr>
+                                        <th><strong>Full Name</strong></th>
+                                        <td>
+                                            <span>{{userData?.Firstname}} {{userData?.Lastname}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Email Address</strong></th>
+                                        <td>
+                                            <span>{{userData?.Email_Address}} </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Status</strong></th>
+                                        <td>
+                                            <span *ngIf="userData?.Status">Active</span>
+                                            <button *ngIf="userData?.Status" class="statusBtnAct" (click)="onChangeStatus()">Deactivate</button>
+                                            <span *ngIf="!userData?.Status">Inactive</span>
+                                            <button *ngIf="!userData?.Status" class="statusBtnInact" (click)="onChangeStatus()">Activate</button>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Contact Number</strong></th>
+                                        <td>
+                                            <span>{{userData?.Phone1}} </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Zip Code</strong></th>
+                                        <td>
+                                            <span>{{userData?.Zip_Code}} </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>User Type</strong></th>
+                                        <td>
+                                            <span>{{userData?.userType}} </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong></strong></th>
+                                        <td>
+                                            <span> </span>
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                        <th><strong>Email Address</strong></th>
+                                        <td>
+                                            <span>{{userData?.Email_Address}} </span>
+                                        </td>
+                                    </tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6">
+                            <table class="table shop_table ecommerce-checkout-review-order-table">
+                                <tbody *ngIf="userData.userType === 'employer'">
+                                    <tr>
+                                        <th><strong>Speciality</strong> </th>
+                                        <td>
+                                            <span class="amount">{{userData?.Speciality}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Practice Phone</strong> </th>
+                                        <td>
+                                            <span class="amount">{{userData?.Practice_Phone}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="cart-subtotal">
+                                        <th><strong>Contact Person</strong></th>
+                                        <td>
+                                            <span class="amount">{{userData?.Contact_Person}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="shipping">
+                                        <th><strong>Contact Phone</strong></th>
+                                        <td>
+                                            <span>{{userData?.Contact_Phone_Nr}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="order-total">
+                                        <th><strong></strong></th>
+                                        <td>
+                                            <strong><span class="amount"></span></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="userData.userType === 'jobseeker'">
+                                    <tr>
+                                        <th><strong>Position</strong> </th>
+                                        <td>
+                                            <span class="amount">{{userData?.Position}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Experience(yrs)</strong> </th>
+                                        <td>
+                                            <span class="amount">{{userData?.Experience}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="cart-subtotal">
+                                        <th><strong>Hourly Pay</strong></th>
+                                        <td>
+                                            <span class="amount">${{userData?.Hourly_Pay}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="shipping">
+                                        <th><strong>Travel Distance</strong></th>
+                                        <td>
+                                            <span>{{userData?.Travel_Distance}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="order-total">
+                                        <th><strong></strong></th>
+                                        <td>
+                                            <strong><span class="amount"></span></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="offers" class="tab-pane fade">
+                    <div class="order-review-wrap ecommerce-checkout-review-order" id="order_review">
+                        <h2 class="heading uppercase bottom-line full-grey">Offers History</h2>
+                        <div class="col-md-12">
+                            <table class="shop_table transaction_table cart table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-4">Position</th>
+                                        <th class="col-lg-4">Date</th>
+                                        <th class="col-lg-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let offer of offerPagedIntems">
+                                    <tr>
+                                        <td>
+                                            <span class="col-lg-4">{{offer?.Position_id}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="col-lg-4">{{offer?.Availability_id.Date | date: 'dd/MM/yyyy'}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="col-lg-4">{{offer?.Status}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- pager -->
+                            <ul *ngIf="offersPager.pages && offersPager.pages.length" class="pagination">
+                                <li [ngClass]="{disabled:offersPager.currentPage === 1}" class="static-page">
+                                    <a (click)="offerPageSet(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:offersPager.currentPage === 1}" class="static-page">
+                                    <a (click)="offerPageSet(offersPager.currentPage - 1)">Prev</a>
+                                </li>
+                                <li *ngFor="let page of offersPager.pages" [ngClass]="{active:offersPager.currentPage === page}">
+                                    <a (click)="offerPageSet(page)">{{page}}</a>
+                                </li>
+                                <li [ngClass]="{disabled:offersPager.currentPage === offersPager.totalPages}" class="static-page">
+                                    <a (click)="offerPageSet(offersPager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:offersPager.currentPage === offersPager.totalPages}" class="static-page">
+                                    <a (click)="offerPageSet(offersPager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="transcation" class="tab-pane fade" *ngIf="userData?.userType === 'employer'">
+                    <div class="order-review-wrap ecommerce-checkout-review-order" id="order_review">
+                        <h2 class="heading uppercase bottom-line full-grey">Transaction History</h2>
+                        <div class="col-md-12">
+                            <table class="shop_table transaction_table cart table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-4">Billing Name</th>
+                                        <th class="col-lg-4">Amount</th>
+                                        <th class="col-lg-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let transcation of pagedItems">
+                                    <tr>
+                                        <td>
+                                            <span class="col-lg-4">{{transcation?.Billing_Name}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="col-lg-4">{{transcation?.Amount}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="col-lg-4">{{transcation?.Status}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- pager -->
+                            <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}" class="static-page">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}" class="static-page">
+                                    <a (click)="setPage(pager.currentPage - 1)">Prev</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="static-page">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="static-page">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
