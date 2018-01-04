@@ -46,7 +46,7 @@ export class PaymentComponent implements OnInit {
       console.log(res);
       if (!res.data.paymentRequired) {
         this.initializePayment();
-        this.releaseOffer(res.data._id);
+        this.releaseOffer(res.data.paymentid);
       }
       else {
 
