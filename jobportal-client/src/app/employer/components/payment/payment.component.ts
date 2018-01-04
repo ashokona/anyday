@@ -43,6 +43,7 @@ export class PaymentComponent implements OnInit {
       }
     );
     this.employerservice.verifyPayment({ offerDate: this.employerservice.itemsToHire[0].Date }).subscribe(res => {
+      console.log(res);
       if (!res.data.paymentRequired) {
         this.initializePayment();
         this.releaseOffer(res.data._id);

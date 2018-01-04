@@ -8,8 +8,8 @@ var Offers = mongoose.model('Offers');
 var VerifyToken = mongoose.model('VerifyToken');
 var auth = require('./auth');
 
-router.get('/history', auth.required, function (req, res, next) {
-    User.findById(req.payload.id, function (err, user) {
+router.get('/history', auth.required, function(req, res, next) {
+    User.findById(req.payload.id, function(err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
             Payments.find({ Employer_id: user._id })
@@ -21,7 +21,7 @@ router.get('/history', auth.required, function (req, res, next) {
                 .populate({
                     path: 'Offers_id',
                 })
-                .exec(function (err, result) {
+                .exec(function(err, result) {
                     if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                     res.status(200).json({
                         data: result
@@ -31,8 +31,9 @@ router.get('/history', auth.required, function (req, res, next) {
     })
 });
 
-router.post('/pay', auth.required, function (req, res, next) {
-    User.findById(req.payload.id, function (err, user) {
+router.post('/pay', auth.required, function(req, res, next) {
+    console.log(req.body)
+    User.findById(req.payload.id, function(err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
             var payment = new Payments();
@@ -54,7 +55,7 @@ router.post('/pay', auth.required, function (req, res, next) {
             if (typeof req.body.Billing_Address_Unit !== 'undefined') {
                 payment.Billing_Address_Unit = req.body.Billing_Address_Unit;
             }
-            payment.save(function (err, result) {
+            payment.save(function(err, result) {
                 if (err) { return res.status(500).json({ title: 'Work Information Not Updaed', error: err }); } else {
                     user.Payments_id.push(result);
                     user.save();
@@ -68,8 +69,8 @@ router.post('/pay', auth.required, function (req, res, next) {
     })
 });
 
-router.post('/verifypayment', auth.required, function (req, res, next) {
-    User.findById(req.payload.id, function (err, user) {
+router.post('/verifypayment', auth.required, function(req, res, next) {
+    User.findById(req.payload.id, function(err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
             Payments.findOne({ offerDate: req.body.offerDate })
@@ -78,21 +79,29 @@ router.post('/verifypayment', auth.required, function (req, res, next) {
                     match: { Status: { $in: ['PENDING', 'ACCEPTED', 'NRTW', 'HIRED'] } },
                     select: 'Status -_id',
                 })
-                .exec(function (err, result) {
+                .exec(function(err, result) {
                     if (err) { return res.status(500).json({ title: 'An error occurred', error: err }) }
                     console.log(result);
-                    if (result.Offers_id.length === 0) {
-                        res.status(200).json({
-                            data: { paymentRequired: false }
-                        });
+                    if (result) {
+                        if (result.Offers_id.length === 0) {
+                            res.status(200).json({
+                                data: {
+                                    paymentRequired: false,
+                                    paymentid: result._id
+                                }
+                            });
+                        } else {
+                            res.status(200).json({
+                                data: { paymentRequired: true, paymentid: result._id }
+                            });
+                        }
                     } else {
                         res.status(200).json({
                             data: { paymentRequired: true }
                         });
                     }
 
-                }
-            )
+                })
         }
     })
 });
