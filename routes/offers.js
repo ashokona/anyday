@@ -102,7 +102,6 @@ router.post('/save', auth.required, function(req, res, next) {
                                             offers.JS_id = offer.JS_id._id;
                                             offers.Date_Submitted = offer.Date_Submitted;
                                             offers.messageId = messageId;
-                                            console.log(offers)
                                             offers.save(function(err, offerResult) {
                                                 if (err) {
                                                     return res.status(500).json({ title: 'Unable To create offer', error: err })
@@ -126,6 +125,9 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                         error: err
                                                                     });
                                                                 } else {
+                                                                    console.log(paymentResult);
+                                                                    paymentResult.JS_id.push(offer.JS_id._id);
+                                                                    paymentResult.Offers_id.push(offerResult);
 
                                                                     var acceptOfferLink = serverUrl + 'acceptoffer/' + token.token;
                                                                     var rejectOfferLink = serverUrl + 'rejectoffer/' + token.token;
@@ -148,11 +150,8 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                     MailService(mailOptions)
                                                                         .then(response => {
                                                                             offerList.splice(0, 1);
-                                                                            console.log(user.Offers_id);
                                                                             user.Offers_id.push(offerResult._id)
                                                                             js.Offers_id.push(offerResult);
-                                                                            paymentResult.JS_id.push(offer.JS_id._id);
-                                                                            paymentResult.Offers_id.push(offerResult);
 
                                                                             js.save();
                                                                             var data = {
@@ -164,24 +163,28 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                                     if (offerList.length === 0) {
                                                                                         console.log("+++++++++")
                                                                                         console.log("+++++++++")
-                                                                                        console.log(user.Offers_id)
+                                                                                        console.log(paymentResult.Offers_id)
                                                                                         console.log("+++++++++")
                                                                                         console.log("+++++++++")
 
-                                                                                        paymentResult.save(function(err) {
-                                                                                            if (err) {
-
-                                                                                            } else {
-                                                                                                user.save();
-                                                                                            }
-                                                                                        })
+                                                                                        paymentResult.save();
+                                                                                        user.save();
                                                                                         res.status(200).json({
                                                                                             message: 'Offer Created and Request was sent to MAIL and SMS',
                                                                                         });
+
                                                                                     }
                                                                                 })
                                                                                 .catch(err => {
                                                                                     if (offerList.length === 0) {
+                                                                                        console.log("+++++++++")
+                                                                                        console.log("+++++++++")
+                                                                                        console.log(paymentResult.Offers_id)
+                                                                                        console.log("+++++++++")
+                                                                                        console.log("+++++++++")
+
+                                                                                        paymentResult.save();
+                                                                                        user.save();
                                                                                         res.status(200).json({
                                                                                             message: 'Offer Created and Request was sent to MAIL',
                                                                                         });

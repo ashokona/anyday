@@ -38,7 +38,7 @@ import { AcceptJobseekerComponent } from './offers/accept-jobseeker/accept-jobse
 import { RejectJobseekerComponent } from './offers/reject-jobseeker/reject-jobseeker.component';
 import { JobseekerRtwComponent } from './offers/jobseeker-rtw/jobseeker-rtw.component';
 import { JobseekerNrtwComponent } from './offers/jobseeker-nrtw/jobseeker-nrtw.component';
-
+import * as $ from 'jquery';
 // import { SearchPipe } from './shared/pipes/search.pipe';
 
 @NgModule({

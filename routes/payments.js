@@ -44,6 +44,7 @@ router.post('/pay', auth.required, function(req, res, next) {
             payment.City = req.body.City;
             payment.State = req.body.State;
             payment.Zip_Code = req.body.Zip_Code;
+            payment.offerDate = req.body.offerDate;
             //payment.Date_Submitted = req.body.Date_Submitted;
             payment.Amount = req.body.Amount;
             payment.Employer_id = user._id;
@@ -63,6 +64,33 @@ router.post('/pay', auth.required, function(req, res, next) {
                     });
                 }
             });
+        }
+    })
+});
+
+router.post('/verifypayment', auth.required, function(req, res, next) {
+    User.findById(req.payload.id, function(err, user) {
+        if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
+        if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
+            Payments.findOne({ offerDate: req.body.offerDate })
+                .populate({
+                    path: 'Offers_id',
+                    match: { Status: { $in: ['PENDING', 'ACCEPTED', 'NRTW', 'HIRED'] } },
+                    select: 'Status -_id',
+                })
+                .exec(function(err, result) {
+                    if (err) { return res.status(500).json({ title: 'An error occurred', error: err }) }
+                    if (result.Offers_id.length === 0) {
+                        res.status(200).json({
+                            data: { paymentRequired: false }
+                        });
+                    } else {
+                        res.status(200).json({
+                            data: { paymentRequired: true }
+                        });
+                    }
+
+                })
         }
     })
 });

@@ -12,6 +12,7 @@ var PaymentsSchema = new Schema({
     Expiration_Year: Number,
     Billing_Address: String,
     Billing_Address_Unit: String,
+    offerDate: Date,
     Status: {
         type: String,
         enum: ['PENDING', 'APPROVED', 'DECLINED'],
