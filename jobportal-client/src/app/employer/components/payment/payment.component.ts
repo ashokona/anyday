@@ -19,6 +19,7 @@ export class PaymentComponent implements OnInit {
   cardNumber: number;
   cardType: string;
   payment: any;
+  paymentStatus: any;
   constructor(
     private jsonLoaderService: JsonLoaderService,
     public employerservice: EmployerService,
@@ -39,7 +40,17 @@ export class PaymentComponent implements OnInit {
       }, error => {
         this.loaderService.display(false);
 
-      });
+      }
+    );
+    this.employerservice.verifyPayment({ offerDate: this.employerservice.itemsToHire[0].Date }).subscribe(res => {
+      if (!res.data.paymentRequired) {
+        this.initializePayment();
+        this.releaseOffer(res.data._id);
+      }
+      else {
+
+      }
+    })
   }
   initializePayment() {
     this.payment = {
@@ -116,6 +127,7 @@ export class PaymentComponent implements OnInit {
   //payment method
   makePayment() {
     this.loaderService.display(true);
+    this.payment.offerDate = this.employerservice.itemsToHire[0].Date;
     this.employerservice.makePayment(this.payment).subscribe(res => {
       if (res.message == 'Payment Sucessfull') {
         this.initializePayment();
@@ -140,14 +152,14 @@ export class PaymentComponent implements OnInit {
         environment.options
       )
       this.route.navigate(['/employer/search']);
-      this.employerservice.itemsToHire = [];      
-    },err=>{
+      this.employerservice.itemsToHire = [];
+    }, err => {
       this.loaderService.display(false);
-        this.notificationsService.error(
-          err.tittle,
-          err.error.message,
-          environment.options
-        )
+      this.notificationsService.error(
+        err.tittle,
+        err.error.message,
+        environment.options
+      )
     })
   }
   //default address function

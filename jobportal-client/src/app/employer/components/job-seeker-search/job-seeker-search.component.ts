@@ -53,6 +53,7 @@ export class JobSeekerSearchComponent implements OnInit {
       this.currentUser = user;
       this.initUserData(user);
     })
+    this.employerService.itemsToHire = [];
     this.itemsToHire = this.employerService.itemsToHire;
     this.jobseekers = [];
   }

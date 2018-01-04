@@ -96,5 +96,12 @@ export class EmployerService {
       return res;
     })
   }
+  // verify payment status
+  verifyPayment(data){
+    const route = 'payments/verifypayment';
+    return this.apiService.post(route,data).map( res =>{
+      return res;
+    })
+  }
 
 }
