@@ -32,7 +32,6 @@ router.get('/history', auth.required, function(req, res, next) {
 });
 
 router.post('/pay', auth.required, function(req, res, next) {
-    console.log(req.body)
     User.findById(req.payload.id, function(err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
@@ -81,7 +80,6 @@ router.post('/verifypayment', auth.required, function(req, res, next) {
                 })
                 .exec(function(err, result) {
                     if (err) { return res.status(500).json({ title: 'An error occurred', error: err }) }
-                    console.log(result);
                     if (result) {
                         if (result.Offers_id.length === 0) {
                             res.status(200).json({

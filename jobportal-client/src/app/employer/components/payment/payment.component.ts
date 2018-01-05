@@ -42,16 +42,19 @@ export class PaymentComponent implements OnInit {
 
       }
     );
-    this.employerservice.verifyPayment({ offerDate: this.employerservice.itemsToHire[0].Date }).subscribe(res => {
-      console.log(res);
-      if (!res.data.paymentRequired) {
-        this.initializePayment();
-        this.releaseOffer(res.data.paymentid);
-      }
-      else {
-
-      }
-    })
+    if(this.employerservice.itemsToHire.length>0){
+      this.employerservice.verifyPayment({ offerDate: this.employerservice.itemsToHire[0].Date }).subscribe(res => {
+        if (!res.data.paymentRequired) {
+          this.initializePayment();
+          this.releaseOffer(res.data.paymentid);
+        }
+        else {
+        }
+      })
+    }
+    else{
+      this.route.navigate(['/search']);      
+    }
   }
   initializePayment() {
     this.payment = {
