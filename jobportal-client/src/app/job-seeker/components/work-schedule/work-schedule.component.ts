@@ -117,6 +117,7 @@ export class WorkScheduleComponent implements OnInit {
                         title: 'Available Time\n Time slot1 \n' + res.data[index].Time_Start + '-' + res.data[index].Time_Finish + '\n Time slot2 \n' + res.data[index].Time_Start1 + '-' + res.data[index].Time_Finish1
                     }
                     this.events.push(eventToshow);
+                    console.log(eventToshow)
                 }
                 else {
                     let eventToshow = {
@@ -125,6 +126,8 @@ export class WorkScheduleComponent implements OnInit {
                         title: 'Available Time\n Time slot1 \n' + res.data[index].Time_Start + '-' + res.data[index].Time_Finish
                     }
                     this.events.push(eventToshow);
+                    console.log(eventToshow)
+                    
                 }
             }
             this.loaderService.display(false);
@@ -175,6 +178,7 @@ export class WorkScheduleComponent implements OnInit {
         return month + '/' + day + '/' + year;
     }
     handleDayClick(event) {
+        console.log("date selected :" + event.date.format());
         this.deleteEventStatus = false;
         if (event.date.format() < this.minDate) {
             alert('Please select a future date');
@@ -213,6 +217,8 @@ export class WorkScheduleComponent implements OnInit {
     }
     handleEventClick(e) {
         this.deleteEventStatus = true;
+        console.log("date selected :" + e.calEvent.start.format());
+        
         if (e.calEvent.start.format() < this.minDate) {
             alert('outdated event');
         }
