@@ -184,12 +184,15 @@ export class WorkScheduleComponent implements OnInit {
             alert('Please select a future date');
         }
         else {
-
             this.start = event.date._d;
+            let newDate = new Date(event.date._d);
+            if(newDate.getTimezoneOffset() > 0){
+                newDate = new Date(new Date(event.date._d).getTime() + newDate.getTimezoneOffset() * 60000);
+            }
             this.event = new MyEvent();
             this.initializeTimes();
             let d = new Date(Date.parse(event.date));
-            this.event.start = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+            this.event.start = `${newDate.getMonth() + 1}/${newDate.getDate()}/${newDate.getFullYear()}`;
             this.repeatDay = this.getRepeatDay(this.start.getDay());
             this.dialogVisible = true;
             //trigger detection manually as somehow only moving the mouse quickly after click triggers the automatic detection
@@ -238,9 +241,13 @@ export class WorkScheduleComponent implements OnInit {
             //     this.event.end = end.format();
             // }
             let d = new Date(Date.parse(e.calEvent.start));
+            let newDate = new Date(e.calEvent.start._i);
+            if(newDate.getTimezoneOffset() > 0){
+                newDate = new Date(new Date(e.calEvent.start._i).getTime() + newDate.getTimezoneOffset() * 60000);
+            }
             this.event.id = e.calEvent.id;
             // this.event.start = start.format();
-            this.event.start = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+            this.event.start = `${newDate.getMonth() + 1}/${newDate.getDate()}/${newDate.getFullYear()}`;
             this.repeatDay = this.getRepeatDay(new Date(this.event.start).getDay());
             this.getEventDetails(e.calEvent.id);
             // this.event.allDay = e.calEvent.allDay;
