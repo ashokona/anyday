@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { ApiService } from '../../../shared/services/api.service';
 import { JobseekerService } from '../../../shared/services/jobseeker.service';
 import * as moment from 'moment';
@@ -34,7 +34,7 @@ export class WorkScheduleComponent implements OnInit {
     eventsData: any = [];
     deleteEventStatus: Boolean = false;
     constructor(private cd: ChangeDetectorRef, public apiservice: ApiService, public jobseekerservice: JobseekerService, private notificationsService: NotificationsService,
-        private loaderService: LoaderService) {
+        private loaderService: LoaderService, private ngZone: NgZone) {
         this.minDate = new Date();
         this.calendarminDate = moment(this.minDate).format('MM/DD/YYYY');
         // this.startTimes = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
@@ -64,7 +64,7 @@ export class WorkScheduleComponent implements OnInit {
     }
 
     // get time object from array of objects
-    getTimeObject(time){
+    getTimeObject(time) {
         for (let i = 0; i < this.startTimes.length; i++) {
             if (this.startTimes[i].value == time) {
                 return this.startTimes[i];
@@ -74,7 +74,7 @@ export class WorkScheduleComponent implements OnInit {
     // set end time function
     setEndTime(startTime) {
         let object = this.getTimeObject(startTime);
-        this.endTimes = this.startTimes.slice(this.startTimes.indexOf(object) + 1);        
+        this.endTimes = this.startTimes.slice(this.startTimes.indexOf(object) + 1);
         this.endTime = this.endTimes[0].value;
         this.startTimes1 = this.startTimes.slice(this.startTimes.indexOf(object) + 2);
         this.endTimes1 = this.startTimes.slice(this.startTimes.indexOf(object) + 3);
@@ -85,7 +85,7 @@ export class WorkScheduleComponent implements OnInit {
         this.endTimes1 = this.startTimes.slice(this.startTimes.indexOf(object) + 2);
     }
     setEndTime1(startTime) {
-        let object = this.getTimeObject(startTime);        
+        let object = this.getTimeObject(startTime);
         this.endTimes1 = this.startTimes1.slice(this.startTimes1.indexOf(object) + 1);
         this.endTime1 = this.endTimes1[0].value;
     }
@@ -127,7 +127,7 @@ export class WorkScheduleComponent implements OnInit {
                     }
                     this.events.push(eventToshow);
                     console.log(eventToshow)
-                    
+
                 }
             }
             this.loaderService.display(false);
@@ -186,14 +186,14 @@ export class WorkScheduleComponent implements OnInit {
         else {
             this.start = event.date._d;
             let newDate = new Date(event.date._d);
-            if(newDate.getTimezoneOffset() > 0){
+            if (newDate.getTimezoneOffset() > 0) {
                 newDate = new Date(new Date(event.date._d).getTime() + newDate.getTimezoneOffset() * 60000);
             }
             this.event = new MyEvent();
             this.initializeTimes();
             let d = new Date(Date.parse(event.date));
             this.event.start = `${newDate.getMonth() + 1}/${newDate.getDate()}/${newDate.getFullYear()}`;
-            this.repeatDay = this.getRepeatDay(this.start.getDay());
+            this.repeatDay = this.getRepeatDay(newDate.getDay());
             this.dialogVisible = true;
             //trigger detection manually as somehow only moving the mouse quickly after click triggers the automatic detection
             this.cd.detectChanges();
@@ -221,7 +221,7 @@ export class WorkScheduleComponent implements OnInit {
     handleEventClick(e) {
         this.deleteEventStatus = true;
         console.log("date selected :" + e.calEvent.start.format());
-        
+
         if (e.calEvent.start.format() < this.minDate) {
             alert('outdated event');
         }
@@ -241,9 +241,9 @@ export class WorkScheduleComponent implements OnInit {
             //     this.event.end = end.format();
             // }
             let d = new Date(Date.parse(e.calEvent.start));
-            let newDate = new Date(e.calEvent.start._i);
-            if(newDate.getTimezoneOffset() > 0){
-                newDate = new Date(new Date(e.calEvent.start._i).getTime() + newDate.getTimezoneOffset() * 60000);
+            let newDate = new Date(e.calEvent.start._d);
+            if (newDate.getTimezoneOffset() > 0) {
+                newDate = new Date(new Date(e.calEvent.start._d).getTime() + newDate.getTimezoneOffset() * 60000);
             }
             this.event.id = e.calEvent.id;
             // this.event.start = start.format();
@@ -254,7 +254,25 @@ export class WorkScheduleComponent implements OnInit {
             this.dialogVisible = true;
         }
     }
+    // Drop Event
+    handleDropEvent(event) {
+        let events = this.events;
+        this.jobseekerservice.updateSchedule(event.event.id, { date: new Date(event.event.start._d.getTime() + event.event.start._d.getTimezoneOffset() * 60000) }).subscribe(res => {
+            if (!res.status) {
+                this.ngZone.run(()=>{
+                    this.notificationsService.info(
+                        'Information',
+                        res.message,
+                        environment.options
+                    )
+                    this.JobSchedules();
+                })
+            }
+            else if(res.status){
 
+            }
+        });
+    }
     //get Event details on event click
     getEventDetails(id) {
         for (let i = 0; i < this.eventsData.length; i++) {

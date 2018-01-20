@@ -6,11 +6,11 @@ var User = mongoose.model('User');
 var VerifyToken = mongoose.model('VerifyToken');
 var auth = require('./auth');
 
-router.get('/all', auth.required, function(req, res, next) {
-    User.findById(req.payload.id, function(err, user) {
+router.get('/all', auth.required, function (req, res, next) {
+    User.findById(req.payload.id, function (err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
-            Availabilities.find({ JS_id: user._id }, function(err, result) {
+            Availabilities.find({ JS_id: user._id }, function (err, result) {
                 if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                 res.status(200).json({
                     data: result
@@ -20,8 +20,8 @@ router.get('/all', auth.required, function(req, res, next) {
     })
 });
 
-router.post('/query', auth.required, function(req, res, next) {
-    User.findById(req.payload.id, function(err, user) {
+router.post('/query', auth.required, function (req, res, next) {
+    User.findById(req.payload.id, function (err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
             if (typeof req.body.Date !== 'undefined' && (req.body.Hours_Guaranteed == null || req.body.Hours_Guaranteed == '')) {
@@ -39,7 +39,7 @@ router.post('/query', auth.required, function(req, res, next) {
                             model: 'Positions',
                         }
                     })
-                    .exec(function(err, result) {
+                    .exec(function (err, result) {
                         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                         res.status(200).json({
                             data: result
@@ -62,7 +62,7 @@ router.post('/query', auth.required, function(req, res, next) {
                             model: 'Positions',
                         }
                     })
-                    .exec(function(err, result) {
+                    .exec(function (err, result) {
                         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                         res.status(200).json({
                             data: result
@@ -85,7 +85,7 @@ router.post('/query', auth.required, function(req, res, next) {
                             model: 'Positions',
                         }
                     })
-                    .exec(function(err, result) {
+                    .exec(function (err, result) {
                         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                         res.status(200).json({
                             data: result
@@ -108,7 +108,7 @@ router.post('/query', auth.required, function(req, res, next) {
                             model: 'Positions',
                         }
                     })
-                    .exec(function(err, result) {
+                    .exec(function (err, result) {
                         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
                         res.status(200).json({
                             data: result
@@ -121,16 +121,16 @@ router.post('/query', auth.required, function(req, res, next) {
     })
 });
 
-router.post('/save', auth.required, function(req, res, next) {
+router.post('/save', auth.required, function (req, res, next) {
     var AvailabilitiesList = req.body;
     var SavedavailabilitiesLength = 0;
-    User.findById(req.payload.id, function(err, user) {
+    User.findById(req.payload.id, function (err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
-            AvailabilitiesList.forEach(function(availabilities) {
+            AvailabilitiesList.forEach(function (availabilities) {
                 Availabilities.find({ 'Date': availabilities.Date })
                     .where('JS_id').eq(user._id)
-                    .exec(function(err, avail) {
+                    .exec(function (err, avail) {
                         if (err) {
 
                         }
@@ -153,7 +153,7 @@ router.post('/save', auth.required, function(req, res, next) {
                             if (typeof availabilities.Date_Submitted !== 'undefined') {
                                 avail[0].Date_Submitted = availabilities.Date_Submitted
                             }
-                            avail[0].save(function(err, result) {
+                            avail[0].save(function (err, result) {
                                 if (err) { return res.status(500).json({ title: 'Information Not Updaed', error: err }); } else {
                                     AvailabilitiesList.splice(0, 1);
                                     if (AvailabilitiesList.length === 0) {
@@ -177,7 +177,7 @@ router.post('/save', auth.required, function(req, res, next) {
                             }
                             availability.Hours_Guaranteed = availabilities.Hours_Guaranteed;
                             availability.Date_Submitted = availabilities.Date_Submitted;
-                            availability.save(function(err, result) {
+                            availability.save(function (err, result) {
                                 if (err) { return res.status(500).json({ title: 'There was problem inserting Data', error: err }); } else {
                                     AvailabilitiesList.splice(0, 1);
                                     if (AvailabilitiesList.length === 0) {
@@ -195,11 +195,11 @@ router.post('/save', auth.required, function(req, res, next) {
     })
 });
 
-router.delete('/purge/:id', auth.required, function(req, res, next) {
-    User.findById(req.payload.id, function(err, result) {
+router.delete('/purge/:id', auth.required, function (req, res, next) {
+    User.findById(req.payload.id, function (err, result) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!result) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
-            Availabilities.findByIdAndRemove(req.params.id, function(err, result) {
+            Availabilities.findByIdAndRemove(req.params.id, function (err, result) {
                 if (err) { return res.status(500).json({ title: 'Unable to delete', error: err }); }
                 res.status(200).json({
                     message: "deleted Successfully"
@@ -209,16 +209,52 @@ router.delete('/purge/:id', auth.required, function(req, res, next) {
     })
 });
 
+//update availability
+router.put('/update/:id', auth.required, function (req, res, next) {
+    User.findById(req.payload.id, function (err, result) {
+        if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
+        if (!result) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
+            Availabilities.findById(req.params.id, function (err, result) {
+                if (err) { return res.status(500).json({ title: 'Unable to update', error: err }); }
+                if (result) {
+                    console.log(req.body);
+                    result.Date = req.body.data.date;
+                    Availabilities.find({ JS_id: req.payload.id, Date: result.Date }, function (err, resul) {
+                        if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
+                        if (resul.length != 0) {
+                            res.status(200).json({  
+                                message: "Already Scheduled",  
+                                data: resul,
+                                status: false
+                            });
+                        }
+                        else if (resul.length == 0) {
+                            Availabilities.findByIdAndUpdate(req.params.id, { $set: result }, function (error, resu) {
+                                if (err) { return res.status(500).json({ title: 'Unable to update', error: error }); }
+                                res.status(200).json({
+                                    message: "updated Successfully",
+                                    data: resu,
+                                    status:true
+                                });
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
+});
+
 //delete availability
-router.delete('/delete/:id', auth.required, function(req, res, next) {
-    Availabilities.findById(req.params.id, function(error, result) {
+router.delete('/delete/:id', auth.required, function (req, res, next) {
+    Availabilities.findById(req.params.id, function (error, result) {
         if (error) {
             return res.status(500).json({ title: 'An error occured', error: error });
         }
         if (!result) {
             return res.status(401).json({ title: 'No record', error: { message: 'Schedule Not Found' } });
         } else {
-            Availabilities.findByIdAndRemove(req.params.id, function(err, response) {
+            Availabilities.findByIdAndRemove(req.params.id, function (err, response) {
                 if (err) {
                     return res.status(500).json({ title: 'Unable to delete', error: err });
                 } else {

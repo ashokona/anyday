@@ -28,6 +28,13 @@ export class JobseekerService {
       return res;
     })
   }
+
+  updateSchedule(id,data){
+    const url = 'availability/update/'+id;
+    return this.apiservice.put(url,{data:data}).map( res =>{
+      return res;
+    })
+  }
   sendOtp(email,data) {
     const url = 'user/sendotp/'+email;
     return this.apiservice.post(url,data).map(res => {
