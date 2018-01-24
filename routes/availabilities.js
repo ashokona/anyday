@@ -167,6 +167,7 @@ router.post('/save', auth.required, function (req, res, next) {
                             var availability = new Availabilities();
                             availability.JS_id = user;
                             availability.Date = availabilities.Date;
+                            console.log(availability.Date);
                             availability.Time_Start = availabilities.Time_Start;
                             availability.Time_Finish = availabilities.Time_Finish;
                             if (typeof availabilities.Time_Start1 !== 'undefined') {

@@ -156,8 +156,21 @@ export class WorkScheduleComponent implements OnInit {
     }
 
     formatDate(date) {
-        var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
+        // if (newDate.getTimezoneOffset() > 0) {
+        //     newDate = new Date(new Date(event.date._d).getTime() + newDate.getTimezoneOffset() * 60000);
+        // }
+        let d = new Date(date);
+        if(d.getTimezoneOffset()<0){
+            console.log(date);
+            console.log(d);
+        }
+        if(d.getTimezoneOffset() > 0){
+            console.log(date);
+            console.log("time",d);
+            d = new Date(d.getTime() + d.getTimezoneOffset()*60000);
+            console.log("zone",d);
+        }
+        var month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
 
@@ -330,6 +343,7 @@ export class WorkScheduleComponent implements OnInit {
 
     saveEvent() {
         let startDate = new Date(this.event.start);
+        console.log(startDate);
         let startDay = startDate.getDate();
         if (this.event.allMonth) {
             let lastDay = (new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59)).getDate();
@@ -402,6 +416,7 @@ export class WorkScheduleComponent implements OnInit {
                 }
                 // startDate = new Date(startDate.setDate(startDate.getDate() + 1));
             }
+            console.log(this.eventToStore);
             this.postEvent(this.eventToStore);
         }
         else {
@@ -413,6 +428,7 @@ export class WorkScheduleComponent implements OnInit {
             this.eventToStore[0].Hours_Guaranteed = (this.endTime.substr(0, 2) - this.startTime.substr(0, 2))
             // +(this.endTime1.substr(0, 2) - this.startTime1.substr(0, 2));
             this.eventToStore[0].Date_Submitted = new Date();
+            console.log(this.eventToStore);            
             this.postEvent(this.eventToStore);
         }
         this.dialogVisible = false;
