@@ -160,9 +160,7 @@ export class WorkScheduleComponent implements OnInit {
         //     newDate = new Date(new Date(event.date._d).getTime() + newDate.getTimezoneOffset() * 60000);
         // }
         let d = new Date(date);
-        if(d.getTimezoneOffset()<0){
-            console.log(date);
-            console.log(d);
+        if(d.getTimezoneOffset()<0){         
         }
         if(d.getTimezoneOffset() > 0){
             console.log(date);
@@ -270,7 +268,7 @@ export class WorkScheduleComponent implements OnInit {
     // Drop Event
     handleDropEvent(event) {
         let events = this.events;
-        this.jobseekerservice.updateSchedule(event.event.id, { date: new Date(event.event.start._d.getTime() + event.event.start._d.getTimezoneOffset() * 60000) }).subscribe(res => {
+        this.jobseekerservice.updateSchedule(event.event.id, { date: moment(new Date(event.event.start._d.getTime() + event.event.start._d.getTimezoneOffset() * 60000)).format('LL') }).subscribe(res => {
             if (!res.status) {
                 this.ngZone.run(()=>{
                     this.notificationsService.info(
@@ -282,7 +280,7 @@ export class WorkScheduleComponent implements OnInit {
                 })
             }
             else if(res.status){
-
+                console.log(res);
             }
         });
     }

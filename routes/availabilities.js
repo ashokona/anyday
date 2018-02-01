@@ -234,7 +234,7 @@ router.put('/update/:id', auth.required, function (req, res, next) {
                                 if (err) { return res.status(500).json({ title: 'Unable to update', error: error }); }
                                 res.status(200).json({
                                     message: "updated Successfully",
-                                    data: resu,
+                                    data: resul,
                                     status:true
                                 });
                             })

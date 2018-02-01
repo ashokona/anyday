@@ -4,7 +4,7 @@ var mongooseUniqueValidator = require('mongoose-unique-validator');
 
 var AvailabilitiesSchema = new Schema({
     JS_id: { type: Schema.Types.ObjectId, ref: 'User' },
-    Date: { type: Date, required: true },
+    Date: { type: String, required: true },
     Time_Start: { type: String, required: true },
     Time_Finish: { type: String, required: true },
     Time_Start1: { type: String, required: false },
