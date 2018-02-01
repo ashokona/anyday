@@ -157,6 +157,7 @@ export class JobSeekerSearchComponent implements OnInit {
     jobseekersFilter.Position = this.filterJobseekers.Position;
     jobseekersFilter.pay_request = this.filterJobseekers.pay_request;
     jobseekersFilter.distance = this.filterJobseekers.distance;
+    console.log(jobseekersFilter);
     return jobseekersFilter;
   }
   onDateChange(event) {
