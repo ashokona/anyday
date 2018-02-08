@@ -117,7 +117,7 @@ export class WorkScheduleComponent implements OnInit {
                         title: 'Available Time\n Time slot1 \n' + res.data[index].Time_Start + '-' + res.data[index].Time_Finish + '\n Time slot2 \n' + res.data[index].Time_Start1 + '-' + res.data[index].Time_Finish1
                     }
                     this.events.push(eventToshow);
-                    console.log(eventToshow)
+                    // console.log(eventToshow)
                 }
                 else {
                     let eventToshow = {
@@ -126,7 +126,7 @@ export class WorkScheduleComponent implements OnInit {
                         title: 'Available Time\n Time slot1 \n' + res.data[index].Time_Start + '-' + res.data[index].Time_Finish
                     }
                     this.events.push(eventToshow);
-                    console.log(eventToshow)
+                    // console.log(eventToshow)
 
                 }
             }
@@ -163,10 +163,10 @@ export class WorkScheduleComponent implements OnInit {
         if(d.getTimezoneOffset()<0){         
         }
         if(d.getTimezoneOffset() > 0){
-            console.log(date);
-            console.log("time",d);
+            // console.log(date);
+            // console.log("time",d);
             d = new Date(d.getTime() + d.getTimezoneOffset()*60000);
-            console.log("zone",d);
+            // console.log("zone",d);
         }
         var month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
@@ -189,7 +189,7 @@ export class WorkScheduleComponent implements OnInit {
         return month + '/' + day + '/' + year;
     }
     handleDayClick(event) {
-        console.log("date selected :" + event.date.format());
+        // console.log("date selected :" + event.date.format());
         this.deleteEventStatus = false;
         if (event.date.format() < this.minDate) {
             alert('Please select a future date');
@@ -231,7 +231,7 @@ export class WorkScheduleComponent implements OnInit {
     }
     handleEventClick(e) {
         this.deleteEventStatus = true;
-        console.log("date selected :" + e.calEvent.start.format());
+        // console.log("date selected :" + e.calEvent.start.format());
 
         if (e.calEvent.start.format() < this.minDate) {
             alert('outdated event');
@@ -280,7 +280,7 @@ export class WorkScheduleComponent implements OnInit {
                 })
             }
             else if(res.status){
-                console.log(res);
+                // console.log(res);
             }
         });
     }
@@ -313,7 +313,7 @@ export class WorkScheduleComponent implements OnInit {
         if (data.length > 1) {
             data.splice(0, 1);
         }
-        console.log(moment(data[0].Date).format('LL'))
+        // console.log(moment(data[0].Date).format('LL'))
         this.jobseekerservice.postJobSchedules(data).subscribe(res => {
             if (res) {
                 this.loaderService.display(false);
@@ -341,7 +341,7 @@ export class WorkScheduleComponent implements OnInit {
 
     saveEvent() {
         let startDate = new Date(this.event.start);
-        console.log(startDate);
+        // console.log(startDate);
         let startDay = startDate.getDate();
         if (this.event.allMonth) {
             let lastDay = (new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59)).getDate();
@@ -414,7 +414,7 @@ export class WorkScheduleComponent implements OnInit {
                 }
                 // startDate = new Date(startDate.setDate(startDate.getDate() + 1));
             }
-            console.log(this.eventToStore);
+            // console.log(this.eventToStore);
             this.postEvent(this.eventToStore);
         }
         else {
@@ -426,7 +426,7 @@ export class WorkScheduleComponent implements OnInit {
             this.eventToStore[0].Hours_Guaranteed = (this.endTime.substr(0, 2) - this.startTime.substr(0, 2))
             // +(this.endTime1.substr(0, 2) - this.startTime1.substr(0, 2));
             this.eventToStore[0].Date_Submitted = new Date();
-            console.log(this.eventToStore);            
+            // console.log(this.eventToStore);            
             this.postEvent(this.eventToStore);
         }
         this.dialogVisible = false;

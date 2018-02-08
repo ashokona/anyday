@@ -78,7 +78,7 @@ export class JobSeekerSearchComponent implements OnInit {
       pay_request: null,
       distance: null
     };
-    console.log(this.filterJobseekers);
+    // console.log(this.filterJobseekers);
     this.getJobseekers(jobseekersFilter);
   }
   // initialise employer data to use location lattitude and longitude
@@ -157,7 +157,7 @@ export class JobSeekerSearchComponent implements OnInit {
     jobseekersFilter.Position = this.filterJobseekers.Position;
     jobseekersFilter.pay_request = this.filterJobseekers.pay_request;
     jobseekersFilter.distance = this.filterJobseekers.distance;
-    console.log(jobseekersFilter);
+    // console.log(jobseekersFilter);
     return jobseekersFilter;
   }
   onDateChange(event) {
@@ -211,8 +211,8 @@ export class JobSeekerSearchComponent implements OnInit {
           lng: jobseeker.JS_id.locationLng
         }
         jobseeker.Distance = this.tryHaversine(this.employerLocation, jobseekerLocation);
-        console.log("distance willing to travel: " + jobseeker.JS_id.Travel_Distance)
-        console.log("distance between js and emp: " + jobseeker.Distance)
+        // console.log("distance willing to travel: " + jobseeker.JS_id.Travel_Distance)
+        // console.log("distance between js and emp: " + jobseeker.Distance)
         if (jobseeker.Distance <= jobseeker.JS_id.Travel_Distance) {
           if(this.jobseekers.length>0){
             let count = 0;

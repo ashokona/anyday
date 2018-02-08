@@ -116,7 +116,7 @@ export class ProfileComponent implements OnInit {
       this.isUserDataEdit = !user.personalInfo;
       this.isWorkDataEdit = !user.workInfo;
       this.currentUser = user;
-      console.log(user)
+      // console.log(user)
       if(user.otpVerified){
         this.showVerify = false
       }else{
@@ -173,8 +173,8 @@ export class ProfileComponent implements OnInit {
   }
 
   updateUserData(user) {
-    console.log();
-    this.user.Phone1 = this.user.Phone1.replace(/\D+/g, '');
+    // console.log();
+    // this.user.Phone1 = this.user.Phone1.replace(/\D+/g, '');
     this.loaderService.display(true);
     this.userService.updatePersonal(this.user).subscribe(
       res => {
@@ -190,6 +190,7 @@ export class ProfileComponent implements OnInit {
         this.removeNotification();
       },
       err => {
+        console.log(err);
         this.loaderService.display(false);
         this.notificationsService.error(
           err.title,
