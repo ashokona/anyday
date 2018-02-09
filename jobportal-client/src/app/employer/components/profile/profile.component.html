@@ -99,21 +99,21 @@
                                     <label for="User_Address_street">Address
                   <abbr class="required" title="required">*</abbr>
                   </label>
-                                    <input type="text" class="input-text" placeholder="Street address" [(ngModel)]="user.Address_street" value="" name="Address_street" id="User_Address_street">
+                                    <input type="text" class="input-text" placeholder="Street address" [(ngModel)]="user.Address_street" value="" [disabled]='workInfoUpdated' name="Address_street" id="User_Address_street">
                                     <div *ngIf="Address_Unit.errors && (Address_Unit.dirty || Address_Unit.touched)" class="error">
                                         <div [hidden]="!Address_Unit.errors.required">This field is required</div>
                                     </div>
-                                    <input type="text" class="input-text" placeholder="Apartment, suite, unit etc. (optional)" [(ngModel)]="user.Address_Unit" value="" name="Address_Unit" id="User_Address_Unit" #Address_Unit='ngModel'>
+                                    <input type="text" class="input-text" placeholder="Apartment, suite, unit etc. (optional)" [(ngModel)]="user.Address_Unit" value="" [disabled]='workInfoUpdated'  name="Address_Unit" id="User_Address_Unit" #Address_Unit='ngModel'>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" class="input-text" placeholder="Town / City" [(ngModel)]="user.City" value="" name="City" id="USer+City" #City='ngModel' required>
+                                    <input type="text" class="input-text" placeholder="Town / City" [(ngModel)]="user.City" value="" name="City" id="USer+City" [disabled]='workInfoUpdated'  #City='ngModel' required>
                                     <div *ngIf="City.errors && (City.dirty || City.touched)" class="error">
                                         <div [hidden]="!City.errors.required">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <select name="User_State" [(ngModel)]="user.State" id="User_State" class="country_to_state country_select" title="State *" #State='ngModel' required>
+                                    <select name="User_State" [(ngModel)]="user.State" id="User_State" class="country_to_state country_select" title="State *" [disabled]='workInfoUpdated'  #State='ngModel' required>
                     <option value="" disabled selected>State</option>
                     <option *ngFor="let state of statesList" [attr.value]="state.key">{{state.name}}</option>
                   </select>
@@ -122,7 +122,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="number" class="input-text" placeholder="Zip Code" [(ngModel)]="user.Zip_Code" name="Zip_Code" id="User_Zip_Code" #Zip_Code='ngModel' required>
+                                    <input type="number" class="input-text" placeholder="Zip Code" [(ngModel)]="user.Zip_Code" name="Zip_Code" id="User_Zip_Code" [disabled]='workInfoUpdated'  #Zip_Code='ngModel' required>
                                     <div *ngIf="Zip_Code.errors && (Zip_Code.dirty || Zip_Code.touched)" class="error">
                                         <div [hidden]="!Zip_Code.errors.required">This field is required</div>
                                     </div>
