@@ -55,7 +55,7 @@ router.get('/employer', auth.required, function(req, res, next) {
                     path: 'Availability_id',
                     select: ['Date'],
                 })
-                .where('Status').in(['HIRED', 'ACCEPTED'])
+                // .where('Status').in(['HIRED', 'ACCEPTED'])
                 // .where('Status').eq('ACCEPTED')
                 .exec(function(err, result) {
                     if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
@@ -69,6 +69,7 @@ router.get('/employer', auth.required, function(req, res, next) {
 
 
 router.post('/save', auth.required, function(req, res, next) {
+    
     User.findById(req.payload.id, function(err, user) {
         if (err) { return res.status(500).json({ title: 'An error occurred', error: err }); }
         if (!user) { return res.status(401).json({ title: 'Not Authorised', error: { message: 'Login Again' } }) } else {
@@ -125,7 +126,7 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                         error: err
                                                                     });
                                                                 } else {
-                                                                    console.log(paymentResult);
+
                                                                     paymentResult.JS_id.push(offer.JS_id._id);
                                                                     paymentResult.Offers_id.push(offerResult);
 
@@ -140,7 +141,7 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                         // text: 'eaders.host + '\/user' + '\/confirmation\/' + token.token + '.\n'
                                                                         html: '<b>Hi <strong>' + js.Firstname + ',</strong></b><br>' +
                                                                             ' <p><b>' + user.Firstname + ' ' + user.Lastname + '</b>' + ' has offered you a job for position ' + '<b>' + positionDetails.Position_Name + '</b>' + ' on ' + offerDate + '</p>' +
-                                                                            ' <p>' + 'If you are interested in this offer, accept the offer by accepting the link below' + '</p>' +
+                                                                            ' <p>' + 'If you are interested in this offer, accept the offer by following the link below' + '</p>' +
                                                                             ' <a href="' + acceptOfferLink + '">Accept Offer</a>' +
                                                                             ' <p>' + 'To decline the job offer follow the link below' + '</p>' +
                                                                             ' <a href="' + rejectOfferLink + '">Reject Offer</a>' +
@@ -154,39 +155,26 @@ router.post('/save', auth.required, function(req, res, next) {
                                                                             js.Offers_id.push(offerResult);
 
                                                                             js.save();
+                                                                            paymentResult.save();
+                                                                            user.save();
+                                                                            console.log(offer.JS_id.Position.Position_Name);
                                                                             var data = {
                                                                                 to: js.Phone1,
-                                                                                body: "Hi " + js.Firstname + ", " + user.Firstname + " " + user.Lastname + " has offered a job for positon " + offer.JS_id.Position + " on " + offerDate + " to aceept send " + "'ACCEPT " + token.smsToken + "'" + ", to decline send " + "'DECLINE " + token.smsToken + "'" + " to +18448223442"
+                                                                                body: "Hi " + js.Firstname + ", " + user.Firstname + " " + user.Lastname + " has offered you a job for positon " + offer.JS_id.Position.Position_Name + " on " + offerDate + ". To accept send " + "'ACCEPT " + token.smsToken + "'" + ", to decline send " + "'DECLINE " + token.smsToken + "'" + " to +18448223442"
                                                                             }
                                                                             TwilioService(data)
                                                                                 .then(result => {
                                                                                     if (offerList.length === 0) {
-                                                                                        console.log("+++++++++")
-                                                                                        console.log("+++++++++")
-                                                                                        console.log(paymentResult.Offers_id)
-                                                                                        console.log("+++++++++")
-                                                                                        console.log("+++++++++")
-
-                                                                                        paymentResult.save();
-                                                                                        user.save();
                                                                                         res.status(200).json({
-                                                                                            message: 'Offer Created and Request was sent to MAIL and SMS',
+                                                                                            message: 'Offer Created and Request sent by email and SMS',
                                                                                         });
 
                                                                                     }
                                                                                 })
                                                                                 .catch(err => {
                                                                                     if (offerList.length === 0) {
-                                                                                        console.log("+++++++++")
-                                                                                        console.log("+++++++++")
-                                                                                        console.log(paymentResult.Offers_id)
-                                                                                        console.log("+++++++++")
-                                                                                        console.log("+++++++++")
-
-                                                                                        paymentResult.save();
-                                                                                        user.save();
                                                                                         res.status(200).json({
-                                                                                            message: 'Offer Created and Request was sent to MAIL',
+                                                                                            message: 'Offer Created and Request sent by email',
                                                                                         });
                                                                                     }
                                                                                 })

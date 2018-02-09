@@ -14,6 +14,7 @@ var serverUrl = require('../config').serverUrl;
 
 
 exports.accept = function(offerDetails, res) {
+    console.log(offerDetails)
     var token = new OffersToken();
     token.offerId = offerDetails.offerId._id;
     token.token = crypto.randomBytes(16).toString('hex');
@@ -30,7 +31,7 @@ exports.accept = function(offerDetails, res) {
         } else {
             var acceptJSLink = serverUrl + 'acceptjobseeker/' + token.token;
             var rejectJSLink = serverUrl + 'rejectjobseeker/' + token.token;
-            var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+            var offerDate = offerDetails.offerId.Availability_id.Date;
             var jsEmail = offerDetails.offerId.JS_id.Email_Address;
             var jsFirstName = offerDetails.offerId.JS_id.Firstname;
             var jsLastName = offerDetails.offerId.JS_id.Lastname;
@@ -105,7 +106,7 @@ exports.reject = function(offerDetails, res) {
     var empLastName = offerDetails.offerId.Employer_id.Lastname;
     var empPhone = offerDetails.offerId.Employer_id.Contact_Phone_Nr;
     var jsPosition = offerDetails.offerId.Position_id;
-    var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+    var offerDate = offerDetails.offerId.Availability_id.Date;
 
     var mailOptions = {
         from: 'noreply@anydayemployment.com',
@@ -171,7 +172,7 @@ exports.acceptjs = function(offerDetails, res) {
     var empLastName = offerDetails.offerId.Employer_id.Lastname;
     var empPhone = offerDetails.offerId.Employer_id.Contact_Phone_Nr;
     var jsPosition = offerDetails.offerId.Position_id;
-    var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+    var offerDate = offerDetails.offerId.Availability_id.Date;
 
     token.save(function(err, result) {
         if (err) {
@@ -255,7 +256,7 @@ exports.rejectjs = function(offerDetails, res) {
     var empLastName = offerDetails.offerId.Employer_id.Lastname;
     var empPhone = offerDetails.offerId.Employer_id.Contact_Phone_Nr;
     var jsPosition = offerDetails.offerId.Position_id;
-    var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+    var offerDate = offerDetails.offerId.Availability_id.Date;
 
     var mailOptions = {
         from: 'noreply@anydayemployment.com',
@@ -321,7 +322,7 @@ exports.rtw = function(offerDetails, res) {
     var empLastName = offerDetails.offerId.Employer_id.Lastname;
     var empPhone = offerDetails.offerId.Employer_id.Contact_Phone_Nr;
     var jsPosition = offerDetails.offerId.Position_id;
-    var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+    var offerDate = offerDetails.offerId.Availability_id.Date;
 
     token.save(function(err, result) {
         if (err) {
@@ -405,7 +406,7 @@ exports.nrtw = function(offerDetails, res) {
     var empLastName = offerDetails.offerId.Employer_id.Lastname;
     var empPhone = offerDetails.offerId.Employer_id.Contact_Phone_Nr;
     var jsPosition = offerDetails.offerId.Position_id;
-    var offerDate = offerDetails.offerId.Availability_id.Date.toISOString().slice(0, 10);
+    var offerDate = offerDetails.offerId.Availability_id.Date;
 
     var mailOptions = {
         from: 'noreply@anydayemployment.com',

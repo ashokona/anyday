@@ -30,8 +30,7 @@
                                     {{offer.Position_id}}
                                 </td>
                                 <td class="col-lg-2">
-                                    <span *ngIf="offer.Status === 'HIRED'">{{offer.Status}}</span>
-                                    <span *ngIf="offer.Status === 'ACCEPTED'">Need to RTW</span>
+                                    <span>{{offer.Status}}</span>
                                 </td>
                                 <td class="col-lg-2">
                                     {{offer.Availability_id.Date | date: 'dd/MM/yyyy'}}

@@ -23,6 +23,7 @@ export class PriorJobOfferComponent implements OnInit {
   constructor(private employerService: EmployerService, private notificationsService: NotificationsService, private loaderService: LoaderService, private paginationService: PaginationService) {
     this.loaderService.display(true);
     this.employerService.getOffers().subscribe(res => {
+      console.log(res)
       this.offers = res.data;
       // set items to json response
       this.allItems = res.data;
@@ -32,6 +33,7 @@ export class PriorJobOfferComponent implements OnInit {
       this.loaderService.display(false);
     },
       err => {
+        console.log(err)
         this.loaderService.display(false);
         this.notificationsService.error(
           err.title,
