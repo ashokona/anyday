@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone  } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 
 import { User } from '../../../shared/models/user.model';
 import { JsonLoaderService } from '../../../shared/services/json-loader.service';
@@ -14,18 +14,19 @@ import { LoaderService } from '../../../shared/services/loader.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  isLocationUpdated: Boolean = false;
   userInfoUpdated: Boolean = true;
   workInfoUpdated: Boolean = true;
-  isUserDataEdit:Boolean= false;
-  isWorkDataEdit:Boolean= false;
-  user:User;
-  geoLocation:any;
-  currentUser:any;
-  userType:string;
-  subscription:Subscription;
-  statesList:any[];
-  languagesList:any[];
-  yearsList:any[];
+  isUserDataEdit: Boolean = false;
+  isWorkDataEdit: Boolean = false;
+  user: User;
+  geoLocation: any;
+  currentUser: any;
+  userType: string;
+  subscription: Subscription;
+  statesList: any[];
+  languagesList: any[];
+  yearsList: any[];
   specialityList = [
     { "name": "General Dentistry" },
     { "name": "Endodontist" },
@@ -35,9 +36,9 @@ export class ProfileComponent implements OnInit {
     { "name": "Periodontist" },
   ]
   newImageUploaded: Boolean = false;
-  public options = {types: ['address'],componentRestrictions: { country: 'US' }}
-  
-  getAddress(event){
+  public options = { types: ['address'], componentRestrictions: { country: 'US' } }
+
+  getAddress(event) {
     this.geoLocation = this.shuffleGoogleMapsAddress(event);
     let streetNumber = (this.geoLocation.addr_num) ? this.geoLocation.addr_num : '';
     let streetName = (this.geoLocation.addr) ? this.geoLocation.addr : '';
@@ -47,6 +48,7 @@ export class ProfileComponent implements OnInit {
     let state = (this.geoLocation.state) ? this.geoLocation.state : '';
     let zip = (this.geoLocation.zip) ? this.geoLocation.zip : '';
     this.ngzone.run(() => {
+      this.isLocationUpdated = true;
       this.user.Address_street = streetNumber + ', ' + streetName;
       this.user.Address_Unit = location + ', ' + neighborhood
       this.user.City = this.geoLocation.city;
@@ -58,55 +60,55 @@ export class ProfileComponent implements OnInit {
   }
 
   constructor(
-    private jsonLoaderService:JsonLoaderService,
+    private jsonLoaderService: JsonLoaderService,
     private userService: UserService,
     private notificationsService: NotificationsService,
     private ngzone: NgZone,
     private loaderService: LoaderService
 
-  ) { 
+  ) {
     this.user = {
-      Firstname : "",
-      Lastname : "",
-      Email_Address:"",
-      Address_street : "",
+      Firstname: "",
+      Lastname: "",
+      Email_Address: "",
+      Address_street: "",
       Address_Unit: "",
-      City : "",
-      State : "",
-      Zip_Code:undefined,
-      Practice_Name:"",
-      Speciality:"",
-      Practice_Phone:undefined,
-      Nr_of_Operations:undefined,
-      Nr_of_Staff:undefined,
-      Languages:[],
-      Dental_School:"",
-      Year_Graduated:undefined,
-      License_Nr:"",
-      Years_in_Practice:undefined,
-      Contact_Person:"",
-      Contact_Phone_Nr:undefined,
-      image:""
+      City: "",
+      State: "",
+      Zip_Code: undefined,
+      Practice_Name: "",
+      Speciality: "",
+      Practice_Phone: undefined,
+      Nr_of_Operations: undefined,
+      Nr_of_Staff: undefined,
+      Languages: [],
+      Dental_School: "",
+      Year_Graduated: undefined,
+      License_Nr: "",
+      Years_in_Practice: undefined,
+      Contact_Person: "",
+      Contact_Phone_Nr: undefined,
+      image: ""
     }
-    this.loaderService.display(true);      
-    this.subscription = userService.currentUser.subscribe(user =>{
+    this.loaderService.display(true);
+    this.subscription = userService.currentUser.subscribe(user => {
       this.isUserDataEdit = !user.personalInfo;
       this.isWorkDataEdit = !user.workInfo;
       this.currentUser = user;
       this.initUserData(user);
     })
   }
-  initUserData(user){
-    if(user.userType !== undefined) {
+  initUserData(user) {
+    if (user.userType !== undefined) {
       this.userService.getData(user.Email_Address).subscribe(
-        res =>{
+        res => {
           this.user = res.data;
-          this.loaderService.display(false);  
+          this.loaderService.display(false);
           this.userInfoUpdated = res.data.personalInfo;
-          this.workInfoUpdated = res.data.workInfo;        
+          this.workInfoUpdated = res.data.workInfo;
         },
-        err =>{
-          this.loaderService.display(false);          
+        err => {
+          this.loaderService.display(false);
           this.notificationsService.error(
             err.title,
             err.error.message,
@@ -116,111 +118,123 @@ export class ProfileComponent implements OnInit {
       )
     }
   }
-
-  editUserData(){
+  // sets Location status
+  setLocation() {
+    this.isLocationUpdated = false;
+  }
+  editUserData() {
     this.isUserDataEdit = !this.isUserDataEdit;
   }
 
-  cancelUpdate(){
+  cancelUpdate() {
     this.initUserData(this.currentUser);
-    this.isUserDataEdit = !this.isUserDataEdit;  
+    this.isUserDataEdit = !this.isUserDataEdit;
   }
-  updateUserData(){
-    this.loaderService.display(true);              
-    this.userService.updatePersonal(this.user).subscribe(
-      res =>{
-        this.loaderService.display(false);                      
-         this.notificationsService.success(
+  updateUserData() {
+    if (!this.isLocationUpdated) {
+      this.notificationsService.error(
+        "Error",
+        "Please choose location",
+        environment.options
+      )
+    }
+    else {
+      this.loaderService.display(true);
+      this.userService.updatePersonal(this.user).subscribe(
+        res => {
+          this.loaderService.display(false);
+          this.notificationsService.success(
             'Success',
             res.message,
             environment.options
           )
-        this.isUserDataEdit = !this.isUserDataEdit; 
-        this.userInfoUpdated = false;
-        this.removeNotification();        
-      },
-      err => {
-        this.loaderService.display(false);                      
-        this.notificationsService.error(
+          this.isUserDataEdit = !this.isUserDataEdit;
+          this.userInfoUpdated = false;
+          this.removeNotification();
+        },
+        err => {
+          this.loaderService.display(false);
+          this.notificationsService.error(
             err.title,
             err.error.message,
             environment.options
           )
-      }
-    )
+        }
+      )
+    }
   }
 
-  editWorkData(){
+  editWorkData() {
     this.isWorkDataEdit = !this.isWorkDataEdit;
   }
 
-  cancelWorkUpdate(){
+  cancelWorkUpdate() {
     this.initUserData(this.currentUser);
-    this.isWorkDataEdit = !this.isWorkDataEdit;   
+    this.isWorkDataEdit = !this.isWorkDataEdit;
   }
 
-  updateWorkData(user){
-    this.loaderService.display(true);                          
+  updateWorkData(user) {
+    this.loaderService.display(true);
     this.userService.updateWork(this.user).subscribe(
-      res =>{
-        this.loaderService.display(false);                              
-         this.notificationsService.success(
-            'Success',
-            res.message,
-            environment.options
-          )
-        this.isWorkDataEdit = !this.isWorkDataEdit; 
+      res => {
+        this.loaderService.display(false);
+        this.notificationsService.success(
+          'Success',
+          res.message,
+          environment.options
+        )
+        this.isWorkDataEdit = !this.isWorkDataEdit;
         this.workInfoUpdated = false;
         this.removeNotification();
       },
       err => {
-        this.loaderService.display(false);                              
+        this.loaderService.display(false);
         this.notificationsService.error(
-            err.title,
-            err.error.message,
-            environment.options
-          )
+          err.title,
+          err.error.message,
+          environment.options
+        )
       }
-    )   
+    )
   }
 
-onLanguageChange($event) {
-    
+  onLanguageChange($event) {
+
   }
   removeNotification() {
     if (!this.userInfoUpdated && !this.workInfoUpdated) {
       setTimeout(() => {
         this.notificationsService.remove();
-      },5000);
+      }, 5000);
     }
   }
   ngOnInit() {
-    
+
     this.jsonLoaderService.getStates()
-                            .subscribe(data => {
-                              this.statesList = data;
-                            }, error => {
-                            });
+      .subscribe(data => {
+        this.statesList = data;
+      }, error => {
+      });
     this.jsonLoaderService.getLanguages()
-                            .subscribe(data => {
-                              this.languagesList = data.map(m => ({id:m.name,name:m.name}));;
-                            }, error => {
-                            });
+      .subscribe(data => {
+        this.languagesList = data.map(m => ({ id: m.name, name: m.name }));;
+      }, error => {
+      });
     this.jsonLoaderService.getYears()
-                            .subscribe(data => {
-                              this.yearsList = data;
-                            }, error => {
-                            });
+      .subscribe(data => {
+        this.yearsList = data;
+      }, error => {
+      });
   }
-  changeListener($event) : void {
+  changeListener($event): void {
     this.newImageUploaded = true;
     this.readThis($event.target);
   }
-  
+
   readThis(inputValue: any): void {
-    var file:File = inputValue.files[0];
-    var myReader:FileReader = new FileReader();
-  
+    var file: File = inputValue.files[0];
+    var myReader: FileReader = new FileReader();
+
     myReader.onloadend = (e) => {
       this.user.image = myReader.result;
     }
