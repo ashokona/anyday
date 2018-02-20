@@ -16,6 +16,7 @@ import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  locationStatus: Boolean = false;
   userInfoUpdated: Boolean = true;
   workInfoUpdated: Boolean = true;
   isUserDataEdit: Boolean = false;
@@ -32,7 +33,7 @@ export class ProfileComponent implements OnInit {
   positionList: any[];
   public options = { types: ['address'], componentRestrictions: { country: 'US' } }
   public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
-  
+
   licenseRequired: Boolean = false;
   newImageUploaded: Boolean = false;
   showOtpInput: Boolean = false;
@@ -59,6 +60,7 @@ export class ProfileComponent implements OnInit {
     let state = (this.geoLocation.state) ? this.geoLocation.state : '';
     let zip = (this.geoLocation.zip) ? this.geoLocation.zip : '';
     this.ngzone.run(() => {
+      this.locationStatus = true;
       this.user.Address_street = streetNumber + ', ' + streetName;
       this.user.Address_Unit = location + ', ' + neighborhood
       this.user.City = this.geoLocation.city;
@@ -108,7 +110,7 @@ export class ProfileComponent implements OnInit {
       Contact_Person: "",
       Contact_Phone_Nr: undefined,
       image: "",
-      otpVerified:true
+      otpVerified: true
     }
     this.otp = null;
     this.loaderService.display(true);
@@ -117,10 +119,10 @@ export class ProfileComponent implements OnInit {
       this.isWorkDataEdit = !user.workInfo;
       this.currentUser = user;
       // console.log(user)
-      if(user.otpVerified){
+      if (user.otpVerified) {
         this.showVerify = false
-      }else{
-        this.showVerify = true        
+      } else {
+        this.showVerify = true
       }
       this.initUserData(user);
     });
@@ -130,8 +132,8 @@ export class ProfileComponent implements OnInit {
     if (user.userType !== undefined) {
       this.userService.getData(user.Email_Address).subscribe(
         res => {
-          if(res.data.Position){
-            res.data.PositionId = res.data.Position._id          
+          if (res.data.Position) {
+            res.data.PositionId = res.data.Position._id
           }
           this.user = res.data;
           this.userInfoUpdated = res.data.personalInfo;
@@ -158,7 +160,11 @@ export class ProfileComponent implements OnInit {
     this.isUserDataEdit = !this.isUserDataEdit;
   }
   onLanguageChange($event) {
-    
+
+  }
+  // sets Location
+  setLocation() {
+    this.locationStatus = false;
   }
   onChange($event) {
     if ($event === 'Registered Dental Assistant' || $event === 'Registered Dental Assistant EF' || $event === 'Registered Dental Hygienist' || $event === 'Registered Dental Hygienist EF' || $event === 'General Dentist' || $event === 'Orthodontist' || $event === 'Endodontist' || $event === 'Periodontist' || $event === 'Pedodontist' || $event === 'Oral Surgeon') {
@@ -168,37 +174,46 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  editNumber(){
+  editNumber() {
     this.showVerify = !this.showVerify;
   }
 
   updateUserData(user) {
     // console.log();
     // this.user.Phone1 = this.user.Phone1.replace(/\D+/g, '');
-    this.loaderService.display(true);
-    this.userService.updatePersonal(this.user).subscribe(
-      res => {
-        this.loaderService.display(false);
-        this.notificationsService.success(
-          'Success',
-          res.message,
-          environment.options
-        )
-        this.userInfoUpdated = false;
-        this.isUserDataEdit = !this.isUserDataEdit;
-        this.initUserData(this.currentUser);
-        this.removeNotification();
-      },
-      err => {
-        console.log(err);
-        this.loaderService.display(false);
-        this.notificationsService.error(
-          err.title,
-          err.error.message,
-          environment.options
-        )
-      }
-    )
+    if (!this.locationStatus) {
+      this.notificationsService.error(
+        "Error",
+        "Please choose location",
+        environment.options
+      )
+    }
+    else {
+      this.loaderService.display(true);
+      this.userService.updatePersonal(this.user).subscribe(
+        res => {
+          this.loaderService.display(false);
+          this.notificationsService.success(
+            'Success',
+            res.message,
+            environment.options
+          )
+          this.userInfoUpdated = false;
+          this.isUserDataEdit = !this.isUserDataEdit;
+          this.initUserData(this.currentUser);
+          this.removeNotification();
+        },
+        err => {
+          console.log(err);
+          this.loaderService.display(false);
+          this.notificationsService.error(
+            err.title,
+            err.error.message,
+            environment.options
+          )
+        }
+      )
+    }
   }
 
   editWorkData() {
@@ -238,21 +253,21 @@ export class ProfileComponent implements OnInit {
     if (!this.userInfoUpdated && !this.workInfoUpdated) {
       setTimeout(() => {
         this.notificationsService.remove();
-      },5000);
+      }, 5000);
     }
   }
 
-  mobileValidation(event){
+  mobileValidation(event) {
     var regex = /[!@#\$%\^\&*\)\(+=._-]$/g
     var mobile = this.user.Phone1 ? this.user.Phone1.toString() : '';
-    if(mobile.match(regex)){
+    if (mobile.match(regex)) {
       this.specialChar = true;
-    }else {
-      this.specialChar = false;      
+    } else {
+      this.specialChar = false;
     }
-    if(mobile.length === 10) {
+    if (mobile.length === 10) {
       this.mobileValid = true;
-    }else {
+    } else {
       this.mobileValid = false;
     }
   }
@@ -262,33 +277,33 @@ export class ProfileComponent implements OnInit {
       .subscribe(data => {
         this.statesList = data;
       }, error => {
-    });
+      });
     this.jsonLoaderService.getLanguages()
       .subscribe(data => {
-        this.languagesList = data.map(m => ({id:m.name,name:m.name}));
+        this.languagesList = data.map(m => ({ id: m.name, name: m.name }));
       }, error => {
-    });
+      });
     this.jsonLoaderService.getYears()
       .subscribe(data => {
         this.yearsList = data;
       }, error => {
-    });
+      });
     this.userService.getPositions().subscribe(
       res => {
         this.positionList = res.data;
       }
     )
-    
+
   }
-  converToNumber(){
-    if(this.user.Phone1.indexOf('-')>-1){
+  converToNumber() {
+    if (this.user.Phone1.indexOf('-') > -1) {
       this.user.Phone1 = this.user.Phone1.replace(/\D+/g, '');
-        
-      }
+
+    }
   }
-  sendOtp() {   
-    
-    var payload = { number: this.user.Phone1};
+  sendOtp() {
+
+    var payload = { number: this.user.Phone1 };
     console.log(payload)
     this.loaderService.display(true);
     this.jobseekerService.sendOtp(this.currentUser.Email_Address, payload).subscribe(res => {
