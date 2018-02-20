@@ -16,7 +16,8 @@ import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  locationStatus: Boolean = false;
+  address : any;
+  locationStatus: Boolean = true;
   userInfoUpdated: Boolean = true;
   workInfoUpdated: Boolean = true;
   isUserDataEdit: Boolean = false;
@@ -81,6 +82,7 @@ export class ProfileComponent implements OnInit {
     private jobseekerService: JobseekerService
 
   ) {
+    this.address = '';
     this.user = {
       Firstname: "",
       Lastname: "",
@@ -192,6 +194,7 @@ export class ProfileComponent implements OnInit {
       this.loaderService.display(true);
       this.userService.updatePersonal(this.user).subscribe(
         res => {
+          this.address = '';
           this.loaderService.display(false);
           this.notificationsService.success(
             'Success',

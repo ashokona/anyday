@@ -50,3 +50,6 @@
     padding: 5px;
     background: #ccc;
 }
+.locationError{
+    border-color:red;
+}

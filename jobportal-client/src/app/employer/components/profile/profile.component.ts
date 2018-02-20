@@ -14,7 +14,8 @@ import { LoaderService } from '../../../shared/services/loader.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  isLocationUpdated: Boolean = false;
+  address: any;
+  isLocationUpdated: Boolean = true;
   userInfoUpdated: Boolean = true;
   workInfoUpdated: Boolean = true;
   isUserDataEdit: Boolean = false;
@@ -90,6 +91,7 @@ export class ProfileComponent implements OnInit {
       Contact_Phone_Nr: undefined,
       image: ""
     }
+    this.address = '';
     this.loaderService.display(true);
     this.subscription = userService.currentUser.subscribe(user => {
       this.isUserDataEdit = !user.personalInfo;
@@ -143,6 +145,7 @@ export class ProfileComponent implements OnInit {
       this.userService.updatePersonal(this.user).subscribe(
         res => {
           this.loaderService.display(false);
+          this.address = '';
           this.notificationsService.success(
             'Success',
             res.message,
